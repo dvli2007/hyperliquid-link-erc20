@@ -5,11 +5,12 @@
 1. Install python3
 
 2. Install requirements: `pip install -r requirements.txt`*
-  \**Hint: it's helpful to spin up a python virtual environment for installing the requirements. Run `python3 -m venv venv` to set up a virtual environment.*
 
 3. Set up your environment file: `cp env.example .env`
 
 4. Add your deployer wallet private key into the `.env` file.
+
+\**Hint: it's helpful to spin up a python virtual environment for installing the requirements. Run `python3 -m venv venv` to set up a virtual environment.*
 
 ## Prerequisite
 
