@@ -65,11 +65,11 @@ def main():
     erc20_decimals = erc20_contract.functions.decimals().call()
     spot_token_name = token_info['name']
     spot_decimals = token_info['weiDecimals']
-    extra_wei_decimals = max(erc20_decimals - spot_decimals, 0)
+    extra_wei_decimals = min(max(erc20_decimals - spot_decimals, -2), 18)
     print(f'extra_wei_decimals={extra_wei_decimals}')
 
     print()
-    print(f'You are about to link {spot_token_name} (index={token_index}) to ERC20 token {contract_address}.')
+    print(f'You are about to link {spot_token_name} (index={token_index}) on {network.upper()} to ERC20 token {contract_address}.')
     print('This action is irreversible.')
     print()
     user_confirmation = input('Proceed (y/n)? ').lower()
@@ -79,9 +79,10 @@ def main():
     print()
     print('Proceeding with linking...')
 
+    assert contract_address is not None
     action = {
         "type": "spotDeploy",
-        "setEvmContract": {
+        "requestEvmContract": {
             "token": token_index,
             "address": contract_address.lower(),
             "evmExtraWeiDecimals": extra_wei_decimals,
@@ -96,7 +97,10 @@ def main():
         "vaultAddress": None,
     }
     response = requests.post(L1_API_URL + "/exchange", json=payload)
-    print(response.json())
+    if response.ok:
+        print(f'[{response.status_code}]', response.json())
+    else:
+        print(f'[{response.status_code}]', response.text)
 
 
 if __name__ == '__main__':
