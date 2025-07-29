@@ -18,7 +18,7 @@
 
 2. Mint ERC20 tokens such that the token supply matches the spot token's total supply
 
-3. Send all ERC20 tokens to `0x2222222222222222222222222222222222222222`
+3. Send all ERC20 tokens to its system address. The system address is the token index converted to hex (big-endian), and left-padded by 0's, and prefixed with `0x2`. For example, token index 200 would have a system address of `0x20000000000000000000000000000000000000c8`.
 
 ## Usage
 
@@ -38,7 +38,7 @@ python3 link_erc20.py <network> <erc20_contract_address> <token_index>
 ### Example
 
 ```
-python3 link_erc20.py testnet 0x8cDE56336E289c028C8f7CF5c20283fF02272182 PURR 1
+python3 link_erc20.py testnet 0x8cDE56336E289c028C8f7CF5c20283fF02272182 1
 ```
 
 In the above example, we are linking PURR on Hyperliquid testnet to the ERC20 contract `0x8cDE56336E289c028C8f7CF5c20283fF02272182`.
