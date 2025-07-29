@@ -51,7 +51,7 @@ def main():
     # The account will be used for linking it to a native spot asset.
     account: LocalAccount = Account.from_key(os.getenv('PRIVATE_ADDRESS'))
     print(f'Running with address {account.address}')
-    w3.middleware_onion.inject(SignAndSendRawMiddlewareBuilder.build(account), layer=0)
+    w3.middleware_onion.add(SignAndSendRawMiddlewareBuilder.build(account))
     w3.eth.default_account = account.address
     # Verify connection
     if not w3.is_connected():
@@ -83,13 +83,12 @@ def main():
         "type": "spotDeploy",
         "setEvmContract": {
             "token": token_index,
-            "address": contract_address,
+            "address": contract_address.lower(),
             "evmExtraWeiDecimals": extra_wei_decimals,
         },
     }
     nonce = get_timestamp_ms()
     signature = sign_l1_action(account, action, None, nonce, False)
-    action["setEvmContract"]['address'] = contract_address
     payload = {
         "action": action,
         "nonce": nonce,
