@@ -89,7 +89,7 @@ def main():
         },
     }
     nonce = get_timestamp_ms()
-    signature = sign_l1_action(account, action, None, nonce, False)
+    signature = sign_l1_action(account, action, None, nonce, network == 'mainnet')
     payload = {
         "action": action,
         "nonce": nonce,
