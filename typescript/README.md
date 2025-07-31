@@ -26,15 +26,13 @@
 npx ts-node linkErc20.ts <network> <erc20_contract_address> <token_index>
 ```
 
-**PARAMETERS**
+#### Parameters
 
-**network** - the Hyperliquid network you wish to perform the linking on; must be either `mainnet` or `testnet`.
+- **network:** the Hyperliquid network you wish to perform the linking on; must be either `mainnet` or `testnet`.
+- **erc20_contract_address:** the address for your HyperEVM ERC20 contract
+- **token_index:** the token index for the spot token you wish to link
 
-**erc20_contract_address** - the address for your HyperEVM ERC20 contract
-
-**token_index** - the token index for the spot token you wish to link
-
-**EXAMPLE**
+#### Example
 
 ```
 npx ts-node linkErc20.ts testnet 0x8cDE56336E289c028C8f7CF5c20283fF02272182 1
@@ -54,13 +52,12 @@ npx ts-node linkErc20WithLedger.ts <network> <erc20_contract_address> <token_ind
 npx ts-node finalizeEvmContract.ts <network> <token_index>
 ```
 
-**PARAMETERS**
+#### Parameters
 
-**network** - the Hyperliquid network you wish to perform the linking on; must be either `mainnet` or `testnet`.
+- **network:** the Hyperliquid network you wish to perform the linking on; must be either `mainnet` or `testnet`.
+- **token_index:** the token index for the spot token you wish to link
 
-**token_index** - the token index for the spot token you wish to link
-
-**EXAMPLE**
+#### Example
 
 ```
 npx ts-node finalizeEvmContract.ts testnet 1

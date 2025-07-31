@@ -22,20 +22,19 @@
 
 ## Usage
 
+### To link a spot deployment to an EVM contract
+
 ```
 python3 link_erc20.py <network> <erc20_contract_address> <token_index>
 ```
 
-### Parameters
+#### Parameters
 
-**network** - the Hyperliquid network you wish to perform the linking on; must be either `mainnet` or `testnet`.
+- **network:** the Hyperliquid network you wish to perform the linking on; must be either `mainnet` or `testnet`.
+- **erc20_contract_address:** the address for your HyperEVM ERC20 contract
+- **token_index:** the token index for the spot token you wish to link
 
-**erc20_contract_address** - the address for your HyperEVM ERC20 contract
-
-**token_index** - the token index for the spot token you wish to link
-
-
-### Example
+#### Example
 
 ```
 python3 link_erc20.py testnet 0x8cDE56336E289c028C8f7CF5c20283fF02272182 1
