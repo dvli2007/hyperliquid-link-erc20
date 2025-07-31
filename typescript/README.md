@@ -20,11 +20,13 @@
 
 ## Usage
 
+### To link a spot deployment to an EVM contract
+
 ```
 npx ts-node linkErc20.ts <network> <erc20_contract_address> <token_index>
 ```
 
-### Parameters
+**PARAMETERS**
 
 **network** - the Hyperliquid network you wish to perform the linking on; must be either `mainnet` or `testnet`.
 
@@ -32,11 +34,36 @@ npx ts-node linkErc20.ts <network> <erc20_contract_address> <token_index>
 
 **token_index** - the token index for the spot token you wish to link
 
-
-### Example
+**EXAMPLE**
 
 ```
-python3 link_erc20.py testnet 0x8cDE56336E289c028C8f7CF5c20283fF02272182 1
+npx ts-node linkErc20.ts testnet 0x8cDE56336E289c028C8f7CF5c20283fF02272182 1
 ```
 
 In the above example, we are linking PURR on Hyperliquid testnet to the ERC20 contract `0x8cDE56336E289c028C8f7CF5c20283fF02272182`.
+
+### To link a spot deployment to an EVM contract, signing with a Ledger device
+
+```
+npx ts-node linkErc20WithLedger.ts <network> <erc20_contract_address> <token_index>
+```
+
+### To finalize linking a spot deployment to an EVM contract
+
+```
+npx ts-node finalizeEvmContract.ts <network> <token_index>
+```
+
+**PARAMETERS**
+
+**network** - the Hyperliquid network you wish to perform the linking on; must be either `mainnet` or `testnet`.
+
+**token_index** - the token index for the spot token you wish to link
+
+**EXAMPLE**
+
+```
+npx ts-node finalizeEvmContract.ts testnet 1
+```
+
+In the above example, the PURR finalizer is confirming the linking of spot deployment #1.
