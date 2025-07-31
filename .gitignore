@@ -2,5 +2,10 @@
 
 .DS_Store
 *.pyc
+*.d.ts
+*.d.ts.map
+*.js
+*.js.map
+node_modules
 
 venv
