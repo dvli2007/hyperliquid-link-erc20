@@ -1,24 +1,23 @@
-import dotenv from 'dotenv';
-import { ethers } from 'ethers';
+import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
+import AppEth from '@ledgerhq/hw-app-eth';
 
 import { parseLinkErc20Args } from './utils/args'
 import { getExtraWeiDecimals } from './utils/tokens'
 import { actionHash, constructPhantomAgent, phantomDomain } from './utils/utils'
 
-dotenv.config({ path: '../.env' });
-
 const main = async () => {
-  const { network, contractAddress, tokenIndex } = parseLinkErc20Args(true)
+  const { network, contractAddress, tokenIndex } = parseLinkErc20Args()
   const isMainnet = network === 'mainnet';
-
-  await getExtraWeiDecimals(contractAddress, tokenIndex, isMainnet)
 
   console.log(`\n✅ Network: ${network}`);
   console.log(`✅ Token Index: ${tokenIndex}`);
   console.log(`✅ Contract: ${contractAddress}`);
 
-  const signer = new ethers.Wallet(process.env.PRIVATE_ADDRESS!)
-  console.log(`🔐 Wallet address: ${signer.address}`);
+  const transport = await TransportNodeHid.create();
+  const eth = new AppEth(transport);
+  const derivationPath = "44'/60'/0'/0/0";
+  const { address } = await eth.getAddress(derivationPath);
+  console.log(`🔐 Ledger address: ${address}`);
 
   const extraWeiDecimals = await getExtraWeiDecimals(contractAddress, tokenIndex, isMainnet)
 
@@ -31,7 +30,6 @@ const main = async () => {
       evmExtraWeiDecimals: extraWeiDecimals,
     },
   }
-
   const hash = actionHash(action, null, nonce);
   console.log(`🔢 Action hash: ${hash}`, action);
 
@@ -43,15 +41,21 @@ const main = async () => {
         { name: 'source', type: 'string' },
         { name: 'connectionId', type: 'bytes32' },
       ],
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
     },
     primaryType: 'Agent',
     message: phantomAgent,
   }
-  console.log('✍️ Prompting Wallet for EIP-712 signature...');
+
+  console.log('✍️ Prompting Ledger for EIP-712 signature...');
   console.log('TYPED DATA')
   console.log(typedData);
-  const signatureRaw = await signer.signTypedData(typedData.domain, typedData.types, typedData.message)
-  const signature = ethers.Signature.from(signatureRaw)
+  const signature = await eth.signEIP712Message(derivationPath, typedData)
   console.log('📜 Signature:', signature);
 
   const endpoint = `https://api.hyperliquid${isMainnet ? '' : '-testnet'}.xyz/exchange`;

@@ -1,39 +1,30 @@
 import dotenv from 'dotenv';
 import { ethers } from 'ethers';
 
-import { parseLinkErc20Args } from './utils/args'
-import { getExtraWeiDecimals } from './utils/tokens'
+import { parseFinalizeEvmContractArgs } from './utils/args'
 import { actionHash, constructPhantomAgent, phantomDomain } from './utils/utils'
 
 dotenv.config({ path: '../.env' });
 
 const main = async () => {
-  const { network, contractAddress, tokenIndex } = parseLinkErc20Args(true)
+  const { network, tokenIndex, createNonce } = parseFinalizeEvmContractArgs(true)
   const isMainnet = network === 'mainnet';
-
-  await getExtraWeiDecimals(contractAddress, tokenIndex, isMainnet)
 
   console.log(`\n✅ Network: ${network}`);
   console.log(`✅ Token Index: ${tokenIndex}`);
-  console.log(`✅ Contract: ${contractAddress}`);
 
   const signer = new ethers.Wallet(process.env.PRIVATE_ADDRESS!)
   console.log(`🔐 Wallet address: ${signer.address}`);
 
-  const extraWeiDecimals = await getExtraWeiDecimals(contractAddress, tokenIndex, isMainnet)
-
   const nonce = Date.now()
   const action = {
-    type: 'spotDeploy',
-    requestEvmContract: {
-      token: tokenIndex,
-      address: contractAddress.toLowerCase(),
-      evmExtraWeiDecimals: extraWeiDecimals,
-    },
+    type: 'finalizeEvmContract',
+    token: tokenIndex,
+    input: createNonce === undefined ? 'firstStorageSlot' : { create: { nonce: createNonce } },
   }
 
   const hash = actionHash(action, null, nonce);
-  console.log(`🔢 Action hash: ${hash}`, action);
+  console.log(`🔢 Action hash: ${hash}`);
 
   const phantomAgent = constructPhantomAgent(hash, isMainnet);
   const typedData = {
